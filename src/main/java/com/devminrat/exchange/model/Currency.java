@@ -9,7 +9,8 @@ public class Currency {
     public Currency() {
     }
 
-    public Currency(String name, String code, String sign) {
+    public Currency(Integer id, String name, String code, String sign) {
+        this.id = id;
         this.name = name;
         this.code = code;
         this.sign = sign;
@@ -41,5 +42,15 @@ public class Currency {
 
     public void setSign(String sign) {
         this.sign = sign;
+    }
+
+    @Override
+    public String toString() {
+        return "Currency{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", sign='" + sign + '\'' +
+                '}';
     }
 }

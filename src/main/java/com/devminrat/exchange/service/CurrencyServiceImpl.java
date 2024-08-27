@@ -18,4 +18,13 @@ public class CurrencyServiceImpl implements CurrencyService {
     public List<Currency> getAllCurrencies() {
         return currencyDao.getAllCurrencies();
     }
+
+    @Override
+    public Currency setCurrency(Currency currency) {
+        if (currencyDao.currencyExists(currency.getCode())) {
+            return null;
+        }
+
+        return currencyDao.setCurrency(currency);
+    }
 }

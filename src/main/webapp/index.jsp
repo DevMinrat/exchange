@@ -8,10 +8,10 @@
 <h1><%= "Hello World!" %>
 </h1>
 <br/>
-<a href="currency">All Currencies</a>
+<a href="currencies">All Currencies</a>
 <br/>
 <br/>
-<form method="post" action="currency" enctype="application/x-www-form-urlencoded">
+<form method="post" action="currencies" enctype="application/x-www-form-urlencoded">
     <input type="text" name="name" placeholder="Name">
     <input type="text" name="code" placeholder="Code">
     <input type="text" name="sign" placeholder="Sign">

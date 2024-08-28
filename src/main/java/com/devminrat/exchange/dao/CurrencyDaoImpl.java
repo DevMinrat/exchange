@@ -10,8 +10,6 @@ import static com.devminrat.exchange.util.DatabaseUtil.getConnection;
 
 public class CurrencyDaoImpl implements CurrencyDao {
 
-    //TODO: implement more detailed exceptions
-
     @Override
     public Currency getCurrency(String currencyCode) {
         String sql = "select * from Currencies where code=?";
@@ -33,8 +31,9 @@ public class CurrencyDaoImpl implements CurrencyDao {
                 }
             }
 
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
+            return null;
         }
 
         return currency;
@@ -57,8 +56,9 @@ public class CurrencyDaoImpl implements CurrencyDao {
                     currencies.add(currency);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
+            return null;
         }
 
         return currencies;
@@ -89,10 +89,10 @@ public class CurrencyDaoImpl implements CurrencyDao {
                     return currency;
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override

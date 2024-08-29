@@ -1,6 +1,10 @@
 package com.devminrat.exchange.model;
 
 public class Currency {
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_CODE = "code";
+    public static final String FIELD_SIGN = "sign";
+
     private Integer id;
     private String name;
     private String code;

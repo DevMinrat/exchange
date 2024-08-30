@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
+import static com.devminrat.exchange.constants.ErrorMessage.*;
 import static com.devminrat.exchange.util.ResponseUtil.*;
+import static com.devminrat.exchange.util.ValidationUtil.isValidValues;
 
 @WebServlet(name = "currencyController", value = "/currencies/*")
 public class CurrencyController extends HttpServlet {
@@ -30,7 +32,7 @@ public class CurrencyController extends HttpServlet {
                     String currencyCode = currencies[1];
                     handleGetCurrencyByCode(resp, currencyCode);
                 } else {
-                    writeBadRequestResponse(resp, "Check your URL path");
+                    writeBadRequestResponse(resp, CHECK_URL.getMessage());
                 }
             }
         } catch (Exception e) {
@@ -43,13 +45,12 @@ public class CurrencyController extends HttpServlet {
         resp.setContentType("application/json");
         Currency newCurrency = new Currency();
         try {
-            if (!req.getParameter(Currency.FIELD_NAME).isBlank() && !req.getParameter(Currency.FIELD_CODE).isBlank()
-                    && !req.getParameter(Currency.FIELD_SIGN).isBlank()) {
+            if (isValidValues(Currency.FIELD_NAME, Currency.FIELD_CODE, Currency.FIELD_SIGN)) {
                 newCurrency.setName(req.getParameter(Currency.FIELD_NAME));
                 newCurrency.setCode(req.getParameter(Currency.FIELD_CODE));
                 newCurrency.setSign(req.getParameter(Currency.FIELD_SIGN));
             } else {
-                writeBadRequestResponse(resp, "Missing required field");
+                writeBadRequestResponse(resp, MISSING_FIELD.getMessage());
                 return;
             }
 
@@ -59,7 +60,7 @@ public class CurrencyController extends HttpServlet {
                 String json = objectMapper.writeValueAsString(addedCurrency);
                 writeCreatedResponse(resp, json);
             } else {
-                writeConflictResponse(resp, "Currency already exists");
+                writeConflictResponse(resp, CURRENCY_EXIST.getMessage());
             }
 
         } catch (Exception e) {
@@ -81,7 +82,7 @@ public class CurrencyController extends HttpServlet {
     private void handleGetCurrencyByCode(HttpServletResponse resp, String code) throws IOException {
         Currency currency = currencyService.getCurrency(code);
         if (currency == null) {
-            writeNotFoundResponse(resp, "Currency not found");
+            writeNotFoundResponse(resp, CURRENCY_NOT_FOUND.getMessage());
         } else {
             String json = objectMapper.writeValueAsString(currency);
             resp.getWriter().write(json);

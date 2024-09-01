@@ -11,6 +11,9 @@
 <a href="currencies">All Currencies</a>
 <br/>
 <br/>
+<a href="exchangeRates">All Exchange Rates</a>
+<br/>
+<br/>
 <form method="post" action="currencies" enctype="application/x-www-form-urlencoded">
     <input type="text" name="name" placeholder="Name">
     <input type="text" name="code" placeholder="Code">

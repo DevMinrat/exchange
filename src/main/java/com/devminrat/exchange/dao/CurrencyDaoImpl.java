@@ -13,7 +13,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
     @Override
     public Currency getCurrency(String currencyCode) {
         String sql = "select * from Currencies where code=?";
-        Currency currency = new Currency();
+        Currency currency;
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -93,10 +93,5 @@ public class CurrencyDaoImpl implements CurrencyDao {
             e.printStackTrace();
             return null;
         }
-    }
-
-    @Override
-    public boolean currencyExists(String currencyCode) {
-        return getCurrency(currencyCode) != null;
     }
 }

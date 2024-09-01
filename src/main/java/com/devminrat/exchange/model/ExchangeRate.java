@@ -2,16 +2,17 @@ package com.devminrat.exchange.model;
 
 public class ExchangeRate {
     private Integer id;
-    private Integer baseCurrencyId;
-    private Integer targetCurrencyId;
+    private Currency baseCurrency;
+    private Currency targetCurrency;
     private Double rate;
 
     public ExchangeRate() {
     }
 
-    public ExchangeRate(Integer baseCurrencyId, Integer targetCurrencyId, Double rate) {
-        this.baseCurrencyId = baseCurrencyId;
-        this.targetCurrencyId = targetCurrencyId;
+    public ExchangeRate(Integer id, Currency baseCurrency, Currency targetCurrency, Double rate) {
+        this.id = id;
+        this.baseCurrency = baseCurrency;
+        this.targetCurrency = targetCurrency;
         this.rate = rate;
     }
 
@@ -19,20 +20,24 @@ public class ExchangeRate {
         return id;
     }
 
-    public Integer getBaseCurrencyId() {
-        return baseCurrencyId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setBaseCurrencyId(Integer baseCurrencyId) {
-        this.baseCurrencyId = baseCurrencyId;
+    public Currency getBaseCurrency() {
+        return baseCurrency;
     }
 
-    public Integer getTargetCurrencyId() {
-        return targetCurrencyId;
+    public void setBaseCurrency(Currency baseCurrency) {
+        this.baseCurrency = baseCurrency;
     }
 
-    public void setTargetCurrencyId(Integer targetCurrencyId) {
-        this.targetCurrencyId = targetCurrencyId;
+    public Currency getTargetCurrency() {
+        return targetCurrency;
+    }
+
+    public void setTargetCurrency(Currency targetCurrency) {
+        this.targetCurrency = targetCurrency;
     }
 
     public Double getRate() {
@@ -41,5 +46,15 @@ public class ExchangeRate {
 
     public void setRate(Double rate) {
         this.rate = rate;
+    }
+
+    @Override
+    public String toString() {
+        return "ExchangeRate{" +
+                "id=" + id +
+                ", baseCurrency=" + baseCurrency +
+                ", targetCurrency=" + targetCurrency +
+                ", rate=" + rate +
+                '}';
     }
 }

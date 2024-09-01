@@ -21,10 +21,15 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     public Currency setCurrency(Currency currency) {
-        if (currencyDao.currencyExists(currency.getCode())) {
+        if (currencyExists(currency.getCode())) {
             return null;
         }
 
         return currencyDao.setCurrency(currency);
+    }
+
+    @Override
+    public boolean currencyExists(String currencyCode) {
+        return getCurrency(currencyCode) != null;
     }
 }

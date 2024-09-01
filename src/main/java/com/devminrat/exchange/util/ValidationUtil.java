@@ -1,7 +1,5 @@
 package com.devminrat.exchange.util;
 
-import java.util.Set;
-
 public final class ValidationUtil {
     private ValidationUtil() {
     }

@@ -19,6 +19,8 @@ public class CurrencyController extends HttpServlet {
     private final CurrencyService currencyService = new CurrencyServiceImpl();
     ObjectMapper objectMapper = new ObjectMapper();
 
+    //TODO: use CurrencyNotFoundException
+
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
@@ -44,6 +46,7 @@ public class CurrencyController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
         Currency newCurrency = new Currency();
+        //TODO: refactoring isValidValues - it gets constants instead of values.
         try {
             if (isValidValues(Currency.FIELD_NAME, Currency.FIELD_CODE, Currency.FIELD_SIGN)) {
                 newCurrency.setName(req.getParameter(Currency.FIELD_NAME));

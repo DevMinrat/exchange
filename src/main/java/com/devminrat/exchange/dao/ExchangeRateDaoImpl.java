@@ -20,7 +20,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
                 "JOIN Currencies tc ON e.TargetCurrencyId = tc.ID " +
                 "where bc.Code=? and tc.Code=?;";
 
-        ExchangeRate exchangeRate = new ExchangeRate();
+        ExchangeRate exchangeRate;
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -31,7 +31,9 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
                     ps.setString(2, targetCurrencyCode);
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            exchangeRate = getExchangeRate(rs);
+                            exchangeRate = createExchangeRate(rs);
+                        } else {
+                            return null;
                         }
                     }
                 }
@@ -39,14 +41,40 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
+            return null;
         }
         return exchangeRate;
     }
 
     @Override
-    public ExchangeRate setExchangeRate(ExchangeRate exchangeRate) {
-//        stmt.execute("PRAGMA foreign_keys = ON;");
-        return null;
+    public ExchangeRate setExchangeRate(Integer baseCurrencyID, Integer targetCurrencyID, Double rate) {
+        String sql = "INSERT INTO ExchangeRates(BaseCurrencyId, TargetCurrencyId, Rate) VALUES(?,?,?)";
+
+        ExchangeRate exchangeRate = new ExchangeRate();
+
+        try (Connection conn = getConnection()) {
+            try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+//                pstmt.execute("PRAGMA foreign_keys = ON;");
+
+                pstmt.setInt(1, baseCurrencyID);
+                pstmt.setInt(2, targetCurrencyID);
+                pstmt.setDouble(3, rate);
+
+                int rows = pstmt.executeUpdate();
+
+                if (rows > 0) {
+                    try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            exchangeRate.setId(generatedKeys.getInt(1));
+                        }
+                    }
+                }
+                return exchangeRate;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -68,7 +96,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
                 ResultSet rs = stmt.executeQuery(sql);
 
                 while (rs.next()) {
-                    ExchangeRate exchangeRate = getExchangeRate(rs);
+                    ExchangeRate exchangeRate = createExchangeRate(rs);
                     exchangeRates.add(exchangeRate);
                 }
             }
@@ -79,7 +107,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
         return exchangeRates;
     }
 
-    private static ExchangeRate getExchangeRate(ResultSet rs) throws SQLException {
+    private static ExchangeRate createExchangeRate(ResultSet rs) throws SQLException {
         Currency baseCurrency = new Currency(rs.getInt("BaseID"), rs.getString("BaseCode"),
                 rs.getString("BaseName"), rs.getString("BaseSign"));
         Currency targetCurrency = new Currency(rs.getInt("TargetID"), rs.getString("TargetCode"),

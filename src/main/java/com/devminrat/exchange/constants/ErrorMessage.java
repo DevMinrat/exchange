@@ -4,7 +4,10 @@ public enum ErrorMessage {
     CHECK_URL("Check your URL path"),
     MISSING_FIELD("Missing required field"),
     CURRENCY_EXIST("Currency already exists"),
-    CURRENCY_NOT_FOUND("Currency not found");
+    CURRENCY_NOT_FOUND("Currency/currencies not found"),
+
+    EXCHANGE_RATE_NOT_FOUND("Exchange rate not found"),
+    CURRENCY_PAIR_EXIST("Currency pair already exists");
 
     private final String message;
 

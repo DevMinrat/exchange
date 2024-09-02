@@ -1,6 +1,10 @@
 package com.devminrat.exchange.model;
 
 public class ExchangeRate {
+    public static final String FIELD_BASE_CODE = "baseCurrencyCode";
+    public static final String FIELD_TARGET_CODE = "targetCurrencyCode";
+    public static final String FIELD_RATE = "rate";
+
     private Integer id;
     private Currency baseCurrency;
     private Currency targetCurrency;

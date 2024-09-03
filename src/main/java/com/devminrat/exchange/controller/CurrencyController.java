@@ -46,12 +46,16 @@ public class CurrencyController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
         Currency newCurrency = new Currency();
-        //TODO: refactoring isValidValues - it gets constants instead of values.
+
         try {
-            if (isValidValues(Currency.FIELD_NAME, Currency.FIELD_CODE, Currency.FIELD_SIGN)) {
-                newCurrency.setName(req.getParameter(Currency.FIELD_NAME));
-                newCurrency.setCode(req.getParameter(Currency.FIELD_CODE));
-                newCurrency.setSign(req.getParameter(Currency.FIELD_SIGN));
+            String nameField = req.getParameter(Currency.FIELD_NAME);
+            String codeField = req.getParameter(Currency.FIELD_CODE);
+            String signField = req.getParameter(Currency.FIELD_SIGN);
+
+            if (isValidValues(nameField, codeField, signField)) {
+                newCurrency.setName(nameField);
+                newCurrency.setCode(codeField);
+                newCurrency.setSign(signField);
             } else {
                 writeBadRequestResponse(resp, MISSING_FIELD.getMessage());
                 return;

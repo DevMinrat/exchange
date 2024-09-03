@@ -1,6 +1,5 @@
 package com.devminrat.exchange.controller;
 
-import com.devminrat.exchange.model.Currency;
 import com.devminrat.exchange.model.ExchangeRate;
 import com.devminrat.exchange.exceptions.CurrencyNotFoundException;
 import com.devminrat.exchange.exceptions.ExchangeRateAlreadyExistsException;
@@ -48,12 +47,15 @@ public class ExchangeRateController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
-//TODO: add validation for "rate"
-//TODO: refactoring isValidValues - it gets constants instead of values.
+
         try {
-            if (isValidValues(ExchangeRate.FIELD_BASE_CODE, ExchangeRate.FIELD_TARGET_CODE, ExchangeRate.FIELD_RATE)) {
-                ExchangeRate newExchangeRate = exchangeRateService.setExchangeRate(req.getParameter(ExchangeRate.FIELD_BASE_CODE),
-                        req.getParameter(ExchangeRate.FIELD_TARGET_CODE), Double.parseDouble(req.getParameter(ExchangeRate.FIELD_RATE)));
+            String baseCode = req.getParameter(ExchangeRate.FIELD_TARGET_CODE);
+            String targetCode = req.getParameter(ExchangeRate.FIELD_BASE_CODE);
+            String rate = req.getParameter(ExchangeRate.FIELD_RATE);
+
+            if (isValidValues(baseCode, targetCode, rate)) {
+                ExchangeRate newExchangeRate = exchangeRateService.setExchangeRate(req.getParameter(baseCode),
+                        req.getParameter(targetCode), Double.parseDouble(req.getParameter(rate)));
 
                 String json = objectMapper.writeValueAsString(newExchangeRate);
                 writeCreatedResponse(resp, json);

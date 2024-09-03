@@ -10,5 +10,7 @@ public interface ExchangeRateDao {
 
     ExchangeRate setExchangeRate(Integer baseCurrencyID, Integer targetCurrencyID, Double rate);
 
+    ExchangeRate patchExchangeRate(Integer baseCurrencyID, Integer targetCurrencyID, Double rate);
+
     List<ExchangeRate> getAllExchangeRates();
 }

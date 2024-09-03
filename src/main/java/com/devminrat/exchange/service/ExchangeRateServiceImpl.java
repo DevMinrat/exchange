@@ -57,6 +57,27 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     }
 
     @Override
+    public ExchangeRate patchExchangeRate(String baseCurrencyCode, String targetCurrencyCode, Double rate) throws CurrencyNotFoundException, ExchangeRateAlreadyExistsException {
+        ExchangeRate exchangeRate;
+        Currency baseCurrency = currencyService.getCurrency(baseCurrencyCode);
+        Currency targetCurrency = currencyService.getCurrency(targetCurrencyCode);
+
+        if (baseCurrency == null || targetCurrency == null) {
+            throw new CurrencyNotFoundException(CURRENCY_NOT_FOUND.getMessage());
+        }
+
+        exchangeRate = exchangeRateDao.patchExchangeRate(baseCurrency.getId(), targetCurrency.getId(), rate);
+        if (exchangeRate != null) {
+            exchangeRate.setBaseCurrency(baseCurrency);
+            exchangeRate.setTargetCurrency(targetCurrency);
+            exchangeRate.setRate(rate);
+            return exchangeRate;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public boolean exchangeRateExists(String baseCurrencyCode, String targetCurrencyCode) {
         return getExchangeRate(baseCurrencyCode + targetCurrencyCode) != null;
     }

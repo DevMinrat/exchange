@@ -12,6 +12,8 @@ public interface ExchangeRateService {
 
     ExchangeRate setExchangeRate(String baseCurrencyCode, String targetCurrencyCode, Double rate) throws CurrencyNotFoundException, ExchangeRateAlreadyExistsException;
 
+    ExchangeRate patchExchangeRate(String baseCurrencyCode, String targetCurrencyCode, Double rate) throws CurrencyNotFoundException, ExchangeRateAlreadyExistsException;
+
     List<ExchangeRate> getAllExchangeRates();
 
     boolean exchangeRateExists(String baseCurrencyId, String targetCurrencyId);

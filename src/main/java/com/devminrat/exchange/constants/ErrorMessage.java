@@ -6,7 +6,7 @@ public enum ErrorMessage {
     CURRENCY_EXIST("Currency already exists"),
     CURRENCY_NOT_FOUND("Currency/currencies not found"),
 
-    EXCHANGE_RATE_NOT_FOUND("Exchange rate not found"),
+    CURRENCY_PAIR_NOT_FOUND("Currency pair not found"),
     CURRENCY_PAIR_EXIST("Currency pair already exists");
 
     private final String message;

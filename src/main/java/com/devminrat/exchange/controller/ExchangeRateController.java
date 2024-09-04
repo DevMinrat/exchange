@@ -12,11 +12,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 
 import static com.devminrat.exchange.constants.ErrorMessage.*;
 import static com.devminrat.exchange.util.ResponseUtil.*;
+import static com.devminrat.exchange.util.SplitCurrencyCodeUtil.splitCode;
 import static com.devminrat.exchange.util.ValidationUtil.isValidValues;
 
 @WebServlet(name = "exchangeRateController", value = "/exchangeRates/*")
@@ -86,25 +90,26 @@ public class ExchangeRateController extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         try {
-            String[] exchangeRate = pathInfo.split("/");
-            if (exchangeRate.length == 2) {
-                String exchangeRateCode = exchangeRate[1];
-                handleGetExchangeRateByCode(resp, exchangeRateCode);
+            //TODO: check weaknesses
+            //TODO: work properly, but return null
+            String[] path = pathInfo.split("/");
+            Map<String, String> currencyCodes = splitCode(path[1]);
+            BufferedReader reader = req.getReader();
+
+            Double rate = Double.parseDouble(reader.readLine().replaceAll("[^\\d.]", ""));
+            System.out.println(rate);
+
+            if (currencyCodes != null) {
+                ExchangeRate updatedExchangeRate = exchangeRateService.patchExchangeRate(
+                        currencyCodes.get("baseCode"), currencyCodes.get("targetCode"), rate);
+
+                String json = objectMapper.writeValueAsString(updatedExchangeRate);
+                writeCreatedResponse(resp, json);
             } else {
                 writeBadRequestResponse(resp, CHECK_URL.getMessage());
             }
 
-            String rate = req.getParameter(ExchangeRate.FIELD_RATE);
 
-            if (isValidValues(rate)) {
-                ExchangeRate newExchangeRate = exchangeRateService.patchExchangeRate("", "",
-                        Double.parseDouble(req.getParameter(rate)));
-
-                String json = objectMapper.writeValueAsString(newExchangeRate);
-                writeCreatedResponse(resp, json);
-            } else {
-                writeBadRequestResponse(resp, MISSING_FIELD.getMessage());
-            }
         } catch (CurrencyNotFoundException e) {
             writeNotFoundResponse(resp, CURRENCY_NOT_FOUND.getMessage());
         } catch (ExchangeRateAlreadyExistsException e) {

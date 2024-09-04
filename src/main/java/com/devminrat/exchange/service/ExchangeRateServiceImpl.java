@@ -8,9 +8,11 @@ import com.devminrat.exchange.model.Currency;
 import com.devminrat.exchange.model.ExchangeRate;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.devminrat.exchange.constants.ErrorMessage.CURRENCY_NOT_FOUND;
 import static com.devminrat.exchange.constants.ErrorMessage.CURRENCY_PAIR_EXIST;
+import static com.devminrat.exchange.util.SplitCurrencyCodeUtil.splitCode;
 
 public class ExchangeRateServiceImpl implements ExchangeRateService {
     private final ExchangeRateDao exchangeRateDao = new ExchangeRateDaoImpl();
@@ -18,13 +20,10 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     @Override
     public ExchangeRate getExchangeRate(String exchangeRateCode) {
-        final int requiredLength = 6;
-        final int splitNum = 3;
+        Map<String, String> currencyCodes = splitCode(exchangeRateCode);
 
-        if (exchangeRateCode != null && exchangeRateCode.length() == requiredLength) {
-            String baseCode = exchangeRateCode.substring(0, splitNum);
-            String targetCode = exchangeRateCode.substring(splitNum);
-            return exchangeRateDao.getExchangeRate(baseCode, targetCode);
+        if (currencyCodes != null) {
+            return exchangeRateDao.getExchangeRate(currencyCodes.get("baseCode"), currencyCodes.get("targetCode"));
         } else {
             return null;
         }

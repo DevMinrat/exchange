@@ -19,8 +19,6 @@ public class CurrencyController extends HttpServlet {
     private final CurrencyService currencyService = new CurrencyServiceImpl();
     ObjectMapper objectMapper = new ObjectMapper();
 
-    //TODO: use CurrencyNotFoundException
-
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");

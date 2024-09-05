@@ -91,7 +91,6 @@ public class ExchangeRateController extends HttpServlet {
         final double rate;
 
         try {
-            //TODO: work properly, but return null
             String[] path = pathInfo.split("/");
             Map<String, String> currencyCodes = splitCode(path[1]);
             BufferedReader reader = req.getReader();

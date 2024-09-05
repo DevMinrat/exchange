@@ -7,7 +7,6 @@ public final class SplitCurrencyCodeUtil {
     private SplitCurrencyCodeUtil() {
     }
 
-    //TODO: check weaknesses
     public static Map<String, String> splitCode(String code) {
         final int REQUIRED_LENGTH = 6;
         final int SPLIT_INDEX = 3;

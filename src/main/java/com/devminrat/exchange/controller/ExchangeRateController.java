@@ -88,16 +88,15 @@ public class ExchangeRateController extends HttpServlet {
     protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
         String pathInfo = req.getPathInfo();
+        final double rate;
 
         try {
-            //TODO: check weaknesses
             //TODO: work properly, but return null
             String[] path = pathInfo.split("/");
             Map<String, String> currencyCodes = splitCode(path[1]);
             BufferedReader reader = req.getReader();
 
-            Double rate = Double.parseDouble(reader.readLine().replaceAll("[^\\d.]", ""));
-            System.out.println(rate);
+            rate = Double.parseDouble(reader.readLine().replaceAll("[^\\d.]", ""));
 
             if (currencyCodes != null) {
                 ExchangeRate updatedExchangeRate = exchangeRateService.patchExchangeRate(
@@ -109,7 +108,8 @@ public class ExchangeRateController extends HttpServlet {
                 writeBadRequestResponse(resp, CHECK_URL.getMessage());
             }
 
-
+        } catch (NumberFormatException e) {
+            writeBadRequestResponse(resp, MISSING_FIELD.getMessage());
         } catch (CurrencyNotFoundException e) {
             writeNotFoundResponse(resp, CURRENCY_NOT_FOUND.getMessage());
         } catch (ExchangeRateAlreadyExistsException e) {

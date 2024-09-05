@@ -79,7 +79,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
 
     @Override
     public ExchangeRate patchExchangeRate(Integer baseCurrencyID, Integer targetCurrencyID, Double rate) {
-        String sql = "UPDATE ExchangeRates SET Rate=? WHERE BaseCurrencyId=? and TargetCurrencyId=?";
+        String sql = "UPDATE ExchangeRates SET Rate=? WHERE BaseCurrencyId=? and TargetCurrencyId=? RETURNING ID";
 
         ExchangeRate exchangeRate = new ExchangeRate();
 
@@ -89,12 +89,13 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
                 pstmt.setInt(2, baseCurrencyID);
                 pstmt.setInt(3, targetCurrencyID);
 
-                int rows = pstmt.executeUpdate();
-
-                if (rows == 0) {
-                    return exchangeRate;
-                } else {
-                    return null;
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        exchangeRate.setId(rs.getInt("ID"));
+                        return exchangeRate;
+                    } else {
+                        return null;
+                    }
                 }
             }
         } catch (SQLException e) {

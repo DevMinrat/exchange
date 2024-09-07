@@ -3,7 +3,7 @@ package com.devminrat.exchange.controller;
 import java.io.*;
 import java.util.List;
 
-import com.devminrat.exchange.model.Currency;
+import com.devminrat.exchange.model.CurrencyDTO;
 import com.devminrat.exchange.service.CurrencyService;
 import com.devminrat.exchange.service.CurrencyServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,12 +43,12 @@ public class CurrencyController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
-        Currency newCurrency = new Currency();
+        CurrencyDTO newCurrency = new CurrencyDTO();
 
         try {
-            String nameField = req.getParameter(Currency.FIELD_NAME);
-            String codeField = req.getParameter(Currency.FIELD_CODE);
-            String signField = req.getParameter(Currency.FIELD_SIGN);
+            String nameField = req.getParameter(CurrencyDTO.FIELD_NAME);
+            String codeField = req.getParameter(CurrencyDTO.FIELD_CODE);
+            String signField = req.getParameter(CurrencyDTO.FIELD_SIGN);
 
             if (isValidValues(nameField, codeField, signField)) {
                 newCurrency.setName(nameField);
@@ -59,7 +59,7 @@ public class CurrencyController extends HttpServlet {
                 return;
             }
 
-            Currency addedCurrency = currencyService.setCurrency(newCurrency);
+            CurrencyDTO addedCurrency = currencyService.setCurrency(newCurrency);
 
             if (addedCurrency != null) {
                 String json = objectMapper.writeValueAsString(addedCurrency);
@@ -75,7 +75,7 @@ public class CurrencyController extends HttpServlet {
     }
 
     private void handleGetAllCurrencies(HttpServletResponse resp) throws IOException {
-        List<Currency> allCurrencies = currencyService.getAllCurrencies();
+        List<CurrencyDTO> allCurrencies = currencyService.getAllCurrencies();
         if (allCurrencies == null) {
             writeInternalServerErrorResponse(resp);
         } else {
@@ -85,7 +85,7 @@ public class CurrencyController extends HttpServlet {
     }
 
     private void handleGetCurrencyByCode(HttpServletResponse resp, String code) throws IOException {
-        Currency currency = currencyService.getCurrency(code);
+        CurrencyDTO currency = currencyService.getCurrency(code);
         if (currency == null) {
             writeNotFoundResponse(resp, CURRENCY_NOT_FOUND.getMessage());
         } else {

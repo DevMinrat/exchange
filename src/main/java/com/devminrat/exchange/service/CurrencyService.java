@@ -1,15 +1,15 @@
 package com.devminrat.exchange.service;
 
-import com.devminrat.exchange.model.Currency;
+import com.devminrat.exchange.model.CurrencyDTO;
 
 import java.util.List;
 
 public interface CurrencyService {
-    Currency getCurrency(String currencyCode);
+    CurrencyDTO getCurrency(String currencyCode);
 
-    Currency setCurrency(Currency currency);
+    CurrencyDTO setCurrency(CurrencyDTO currency);
 
-    List<Currency> getAllCurrencies();
+    List<CurrencyDTO> getAllCurrencies();
 
     boolean currencyExists(String currencyCode);
 }

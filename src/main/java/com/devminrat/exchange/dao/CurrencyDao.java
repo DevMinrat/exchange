@@ -1,11 +1,11 @@
 package com.devminrat.exchange.dao;
 
-import com.devminrat.exchange.model.Currency;
+import com.devminrat.exchange.model.CurrencyDTO;
 
 import java.util.List;
 
 public interface CurrencyDao {
-    Currency getCurrency(String currencyCode);
-    Currency setCurrency(Currency currency);
-    List<Currency> getAllCurrencies();
+    CurrencyDTO getCurrency(String currencyCode);
+    CurrencyDTO setCurrency(CurrencyDTO currency);
+    List<CurrencyDTO> getAllCurrencies();
 }

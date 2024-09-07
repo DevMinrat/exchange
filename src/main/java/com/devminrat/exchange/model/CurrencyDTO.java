@@ -1,6 +1,6 @@
 package com.devminrat.exchange.model;
 
-public class Currency {
+public class CurrencyDTO {
     public static final String FIELD_NAME = "name";
     public static final String FIELD_CODE = "code";
     public static final String FIELD_SIGN = "sign";
@@ -10,10 +10,10 @@ public class Currency {
     private String code;
     private String sign;
 
-    public Currency() {
+    public CurrencyDTO() {
     }
 
-    public Currency(Integer id, String name, String code, String sign) {
+    public CurrencyDTO(Integer id, String name, String code, String sign) {
         this.id = id;
         this.name = name;
         this.code = code;

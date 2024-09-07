@@ -1,7 +1,7 @@
 package com.devminrat.exchange.dao;
 
-import com.devminrat.exchange.model.Currency;
-import com.devminrat.exchange.model.ExchangeRate;
+import com.devminrat.exchange.model.CurrencyDTO;
+import com.devminrat.exchange.model.ExchangeRateDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import static com.devminrat.exchange.util.DatabaseUtil.getConnection;
 
 public class ExchangeRateDaoImpl implements ExchangeRateDao {
     @Override
-    public ExchangeRate getExchangeRate(String baseCurrencyCode, String targetCurrencyCode) {
+    public ExchangeRateDTO getExchangeRate(String baseCurrencyCode, String targetCurrencyCode) {
         String sql = "SELECT e.ID, e.BaseCurrencyId, e.TargetCurrencyId, e.Rate, " +
                 "bc.ID AS BaseID, bc.Code AS BaseCode, bc.FullName AS BaseName, bc.Sign AS BaseSign, " +
                 "tc.ID AS TargetID,  tc.Code AS TargetCode, tc.FullName AS TargetName, tc.Sign AS TargetSign " +
@@ -20,7 +20,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
                 "JOIN Currencies tc ON e.TargetCurrencyId = tc.ID " +
                 "where bc.Code=? and tc.Code=?;";
 
-        ExchangeRate exchangeRate;
+        ExchangeRateDTO exchangeRate;
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -47,10 +47,10 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
     }
 
     @Override
-    public ExchangeRate setExchangeRate(Integer baseCurrencyID, Integer targetCurrencyID, Double rate) {
+    public ExchangeRateDTO setExchangeRate(Integer baseCurrencyID, Integer targetCurrencyID, Double rate) {
         String sql = "INSERT INTO ExchangeRates(BaseCurrencyId, TargetCurrencyId, Rate) VALUES(?,?,?)";
 
-        ExchangeRate exchangeRate = new ExchangeRate();
+        ExchangeRateDTO exchangeRate = new ExchangeRateDTO();
 
         try (Connection conn = getConnection()) {
             try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -78,10 +78,10 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
     }
 
     @Override
-    public ExchangeRate patchExchangeRate(Integer baseCurrencyID, Integer targetCurrencyID, Double rate) {
+    public ExchangeRateDTO patchExchangeRate(Integer baseCurrencyID, Integer targetCurrencyID, Double rate) {
         String sql = "UPDATE ExchangeRates SET Rate=? WHERE BaseCurrencyId=? and TargetCurrencyId=? RETURNING ID";
 
-        ExchangeRate exchangeRate = new ExchangeRate();
+        ExchangeRateDTO exchangeRate = new ExchangeRateDTO();
 
         try (Connection conn = getConnection()) {
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -105,7 +105,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
     }
 
     @Override
-    public List<ExchangeRate> getAllExchangeRates() {
+    public List<ExchangeRateDTO> getAllExchangeRates() {
         String sql = "SELECT e.ID, e.BaseCurrencyId, e.TargetCurrencyId, e.Rate, " +
                 "bc.ID AS BaseID, bc.Code AS BaseCode, bc.FullName AS BaseName, bc.Sign AS BaseSign, " +
                 "tc.ID AS TargetID,  tc.Code AS TargetCode, tc.FullName AS TargetName, tc.Sign AS TargetSign " +
@@ -113,7 +113,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
                 "JOIN Currencies bc ON e.BaseCurrencyId = bc.ID " +
                 "JOIN Currencies tc ON e.TargetCurrencyId = tc.ID";
 
-        List<ExchangeRate> exchangeRates = new ArrayList<>();
+        List<ExchangeRateDTO> exchangeRates = new ArrayList<>();
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -123,7 +123,7 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
                 ResultSet rs = stmt.executeQuery(sql);
 
                 while (rs.next()) {
-                    ExchangeRate exchangeRate = createExchangeRate(rs);
+                    ExchangeRateDTO exchangeRate = createExchangeRate(rs);
                     exchangeRates.add(exchangeRate);
                 }
             }
@@ -134,13 +134,13 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
         return exchangeRates;
     }
 
-    private static ExchangeRate createExchangeRate(ResultSet rs) throws SQLException {
-        Currency baseCurrency = new Currency(rs.getInt("BaseID"), rs.getString("BaseCode"),
+    private static ExchangeRateDTO createExchangeRate(ResultSet rs) throws SQLException {
+        CurrencyDTO baseCurrency = new CurrencyDTO(rs.getInt("BaseID"), rs.getString("BaseCode"),
                 rs.getString("BaseName"), rs.getString("BaseSign"));
-        Currency targetCurrency = new Currency(rs.getInt("TargetID"), rs.getString("TargetCode"),
+        CurrencyDTO targetCurrency = new CurrencyDTO(rs.getInt("TargetID"), rs.getString("TargetCode"),
                 rs.getString("TargetName"), rs.getString("TargetSign"));
 
-        ExchangeRate exchangeRate = new ExchangeRate(rs.getInt("id"), baseCurrency, targetCurrency, rs.getDouble("Rate"));
+        ExchangeRateDTO exchangeRate = new ExchangeRateDTO(rs.getInt("id"), baseCurrency, targetCurrency, rs.getDouble("Rate"));
         return exchangeRate;
     }
 }

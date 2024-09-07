@@ -1,19 +1,19 @@
 package com.devminrat.exchange.model;
 
-public class ExchangeRate {
+public class ExchangeRateDTO {
     public static final String FIELD_BASE_CODE = "baseCurrencyCode";
     public static final String FIELD_TARGET_CODE = "targetCurrencyCode";
     public static final String FIELD_RATE = "rate";
 
     private Integer id;
-    private Currency baseCurrency;
-    private Currency targetCurrency;
+    private CurrencyDTO baseCurrency;
+    private CurrencyDTO targetCurrency;
     private Double rate;
 
-    public ExchangeRate() {
+    public ExchangeRateDTO() {
     }
 
-    public ExchangeRate(Integer id, Currency baseCurrency, Currency targetCurrency, Double rate) {
+    public ExchangeRateDTO(Integer id, CurrencyDTO baseCurrency, CurrencyDTO targetCurrency, Double rate) {
         this.id = id;
         this.baseCurrency = baseCurrency;
         this.targetCurrency = targetCurrency;
@@ -28,19 +28,19 @@ public class ExchangeRate {
         this.id = id;
     }
 
-    public Currency getBaseCurrency() {
+    public CurrencyDTO getBaseCurrency() {
         return baseCurrency;
     }
 
-    public void setBaseCurrency(Currency baseCurrency) {
+    public void setBaseCurrency(CurrencyDTO baseCurrency) {
         this.baseCurrency = baseCurrency;
     }
 
-    public Currency getTargetCurrency() {
+    public CurrencyDTO getTargetCurrency() {
         return targetCurrency;
     }
 
-    public void setTargetCurrency(Currency targetCurrency) {
+    public void setTargetCurrency(CurrencyDTO targetCurrency) {
         this.targetCurrency = targetCurrency;
     }
 

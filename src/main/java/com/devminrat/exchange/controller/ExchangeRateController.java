@@ -1,6 +1,6 @@
 package com.devminrat.exchange.controller;
 
-import com.devminrat.exchange.model.ExchangeRate;
+import com.devminrat.exchange.model.ExchangeRateDTO;
 import com.devminrat.exchange.exceptions.CurrencyNotFoundException;
 import com.devminrat.exchange.exceptions.ExchangeRateAlreadyExistsException;
 import com.devminrat.exchange.service.ExchangeRateService;
@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
@@ -63,12 +62,12 @@ public class ExchangeRateController extends HttpServlet {
         resp.setContentType("application/json");
 
         try {
-            String baseCode = req.getParameter(ExchangeRate.FIELD_TARGET_CODE);
-            String targetCode = req.getParameter(ExchangeRate.FIELD_BASE_CODE);
-            String rate = req.getParameter(ExchangeRate.FIELD_RATE);
+            String baseCode = req.getParameter(ExchangeRateDTO.FIELD_TARGET_CODE);
+            String targetCode = req.getParameter(ExchangeRateDTO.FIELD_BASE_CODE);
+            String rate = req.getParameter(ExchangeRateDTO.FIELD_RATE);
 
             if (isValidValues(baseCode, targetCode, rate)) {
-                ExchangeRate newExchangeRate = exchangeRateService.setExchangeRate(req.getParameter(baseCode),
+                ExchangeRateDTO newExchangeRate = exchangeRateService.setExchangeRate(req.getParameter(baseCode),
                         req.getParameter(targetCode), Double.parseDouble(req.getParameter(rate)));
 
                 String json = objectMapper.writeValueAsString(newExchangeRate);
@@ -98,7 +97,7 @@ public class ExchangeRateController extends HttpServlet {
             rate = Double.parseDouble(reader.readLine().replaceAll("[^\\d.]", ""));
 
             if (currencyCodes != null) {
-                ExchangeRate updatedExchangeRate = exchangeRateService.patchExchangeRate(
+                ExchangeRateDTO updatedExchangeRate = exchangeRateService.patchExchangeRate(
                         currencyCodes.get("baseCode"), currencyCodes.get("targetCode"), rate);
 
                 String json = objectMapper.writeValueAsString(updatedExchangeRate);
@@ -119,7 +118,7 @@ public class ExchangeRateController extends HttpServlet {
     }
 
     private void handleGetAllExchangeRates(HttpServletResponse resp) throws IOException {
-        List<ExchangeRate> allExchangeRates = exchangeRateService.getAllExchangeRates();
+        List<ExchangeRateDTO> allExchangeRates = exchangeRateService.getAllExchangeRates();
         if (allExchangeRates == null) {
             writeInternalServerErrorResponse(resp);
         } else {
@@ -129,7 +128,7 @@ public class ExchangeRateController extends HttpServlet {
     }
 
     private void handleGetExchangeRateByCode(HttpServletResponse resp, String code) throws IOException {
-        ExchangeRate exchangeRate = exchangeRateService.getExchangeRate(code);
+        ExchangeRateDTO exchangeRate = exchangeRateService.getExchangeRate(code);
         if (exchangeRate == null) {
             writeNotFoundResponse(resp, CURRENCY_PAIR_NOT_FOUND.getMessage());
         } else {

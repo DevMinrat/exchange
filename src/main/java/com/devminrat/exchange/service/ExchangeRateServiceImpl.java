@@ -4,8 +4,8 @@ import com.devminrat.exchange.dao.ExchangeRateDao;
 import com.devminrat.exchange.dao.ExchangeRateDaoImpl;
 import com.devminrat.exchange.exceptions.CurrencyNotFoundException;
 import com.devminrat.exchange.exceptions.ExchangeRateAlreadyExistsException;
-import com.devminrat.exchange.model.Currency;
-import com.devminrat.exchange.model.ExchangeRate;
+import com.devminrat.exchange.model.CurrencyDTO;
+import com.devminrat.exchange.model.ExchangeRateDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     private final CurrencyService currencyService = new CurrencyServiceImpl();
 
     @Override
-    public ExchangeRate getExchangeRate(String exchangeRateCode) {
+    public ExchangeRateDTO getExchangeRate(String exchangeRateCode) {
         Map<String, String> currencyCodes = splitCode(exchangeRateCode);
 
         if (currencyCodes != null) {
@@ -30,15 +30,15 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     }
 
     @Override
-    public List<ExchangeRate> getAllExchangeRates() {
+    public List<ExchangeRateDTO> getAllExchangeRates() {
         return exchangeRateDao.getAllExchangeRates();
     }
 
     @Override
-    public ExchangeRate setExchangeRate(String baseCurrencyCode, String targetCurrencyCode, Double rate) throws CurrencyNotFoundException, ExchangeRateAlreadyExistsException {
-        ExchangeRate exchangeRate;
-        Currency baseCurrency = currencyService.getCurrency(baseCurrencyCode);
-        Currency targetCurrency = currencyService.getCurrency(targetCurrencyCode);
+    public ExchangeRateDTO setExchangeRate(String baseCurrencyCode, String targetCurrencyCode, Double rate) throws CurrencyNotFoundException, ExchangeRateAlreadyExistsException {
+        ExchangeRateDTO exchangeRate;
+        CurrencyDTO baseCurrency = currencyService.getCurrency(baseCurrencyCode);
+        CurrencyDTO targetCurrency = currencyService.getCurrency(targetCurrencyCode);
 
         if (baseCurrency == null || targetCurrency == null) {
             throw new CurrencyNotFoundException(CURRENCY_NOT_FOUND.getMessage());
@@ -56,10 +56,10 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     }
 
     @Override
-    public ExchangeRate patchExchangeRate(String baseCurrencyCode, String targetCurrencyCode, Double rate) throws CurrencyNotFoundException, ExchangeRateAlreadyExistsException {
-        ExchangeRate exchangeRate;
-        Currency baseCurrency = currencyService.getCurrency(baseCurrencyCode);
-        Currency targetCurrency = currencyService.getCurrency(targetCurrencyCode);
+    public ExchangeRateDTO patchExchangeRate(String baseCurrencyCode, String targetCurrencyCode, Double rate) throws CurrencyNotFoundException, ExchangeRateAlreadyExistsException {
+        ExchangeRateDTO exchangeRate;
+        CurrencyDTO baseCurrency = currencyService.getCurrency(baseCurrencyCode);
+        CurrencyDTO targetCurrency = currencyService.getCurrency(targetCurrencyCode);
 
         if (baseCurrency == null || targetCurrency == null) {
             throw new CurrencyNotFoundException(CURRENCY_NOT_FOUND.getMessage());

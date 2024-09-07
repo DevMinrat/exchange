@@ -1,6 +1,6 @@
 package com.devminrat.exchange.dao;
 
-import com.devminrat.exchange.model.Currency;
+import com.devminrat.exchange.model.CurrencyDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ import static com.devminrat.exchange.util.DatabaseUtil.getConnection;
 public class CurrencyDaoImpl implements CurrencyDao {
 
     @Override
-    public Currency getCurrency(String currencyCode) {
+    public CurrencyDTO getCurrency(String currencyCode) {
         String sql = "select * from Currencies where code=?";
-        Currency currency;
+        CurrencyDTO currency;
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -23,7 +23,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
                     pstmt.setString(1, currencyCode);
                     ResultSet rs = pstmt.executeQuery();
                     if (rs.next()) {
-                        currency = new Currency(rs.getInt("ID"), rs.getString("FullName"),
+                        currency = new CurrencyDTO(rs.getInt("ID"), rs.getString("FullName"),
                                 rs.getString("Code"), rs.getString("Sign"));
                     } else {
                         return null;
@@ -40,8 +40,8 @@ public class CurrencyDaoImpl implements CurrencyDao {
     }
 
     @Override
-    public List<Currency> getAllCurrencies() {
-        List<Currency> currencies = new ArrayList<>();
+    public List<CurrencyDTO> getAllCurrencies() {
+        List<CurrencyDTO> currencies = new ArrayList<>();
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -51,7 +51,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
                 ResultSet rs = stmt.executeQuery("select * from Currencies");
 
                 while (rs.next()) {
-                    Currency currency = new Currency(rs.getInt("ID"), rs.getString("FullName"),
+                    CurrencyDTO currency = new CurrencyDTO(rs.getInt("ID"), rs.getString("FullName"),
                             rs.getString("Code"), rs.getString("Sign"));
                     currencies.add(currency);
                 }
@@ -65,7 +65,7 @@ public class CurrencyDaoImpl implements CurrencyDao {
     }
 
     @Override
-    public Currency setCurrency(Currency currency) {
+    public CurrencyDTO setCurrency(CurrencyDTO currency) {
         try {
             Class.forName("org.sqlite.JDBC");
             String sql = "insert into Currencies(FullName,Code,Sign) values (?,?,?)";

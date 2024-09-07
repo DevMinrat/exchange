@@ -24,11 +24,25 @@ public class ExchangeAmountServiceImpl implements ExchangeAmountService {
 
     @Override
     public ExchangeAmountDTO getExchangeAmount(String baseCurrencyCode, String targetCurrencyCode, Double amount) {
+        //TODO: refactor this, too large and unreadable.
         ExchangeRateDTO exchangeRate = exchangeRateService.getExchangeRate(baseCurrencyCode + targetCurrencyCode);
+        if (exchangeRate != null) {
 
-        Double convertedAmount = new BigDecimal(amount * exchangeRate.getRate()).setScale(6, RoundingMode.HALF_UP).doubleValue();
+            Double convertedAmount = new BigDecimal(amount * exchangeRate.getRate()).setScale(6, RoundingMode.HALF_UP).doubleValue();
 
-        return new ExchangeAmountDTO(exchangeRate, amount, convertedAmount);
+            return new ExchangeAmountDTO(exchangeRate, amount, convertedAmount);
+        } else {
+            exchangeRate = exchangeRateService.getExchangeRate(targetCurrencyCode + baseCurrencyCode);
+            if (exchangeRate != null) {
+
+                exchangeRate.setRate(BigDecimal.valueOf(1 / exchangeRate.getRate()).setScale(6, RoundingMode.HALF_UP).doubleValue());
+
+                Double convertedAmount = new BigDecimal(amount * exchangeRate.getRate()).setScale(6, RoundingMode.HALF_UP).doubleValue();
+
+                return new ExchangeAmountDTO(exchangeRate, amount, convertedAmount);
+            } else
+                return null;
+        }
     }
 
 //    @Override

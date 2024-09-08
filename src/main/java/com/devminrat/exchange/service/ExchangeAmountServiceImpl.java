@@ -27,7 +27,7 @@ public class ExchangeAmountServiceImpl implements ExchangeAmountService {
     private ExchangeAmountDTO getAmountAtDirectRate(String baseCurrencyCode, String targetCurrencyCode, Double amount) {
         ExchangeRateDTO exchangeRate = exchangeRateService.getExchangeRate(baseCurrencyCode + targetCurrencyCode);
         if (exchangeRate != null) {
-            Double convertedAmount = roundDecimal(amount * exchangeRate.getRate(), 6);
+            Double convertedAmount = roundDecimal(amount * exchangeRate.getRate(), 2);
             return new ExchangeAmountDTO(exchangeRate, amount, convertedAmount);
         }
         return null;
@@ -36,8 +36,8 @@ public class ExchangeAmountServiceImpl implements ExchangeAmountService {
     private ExchangeAmountDTO getAmountAtReverseRate(String baseCurrencyCode, String targetCurrencyCode, Double amount) {
         ExchangeRateDTO exchangeRate = exchangeRateService.getExchangeRate(targetCurrencyCode + baseCurrencyCode);
         if (exchangeRate != null) {
-            exchangeRate.setRate(roundDecimal(1 / exchangeRate.getRate(), 6));
-            Double convertedAmount = roundDecimal(amount * exchangeRate.getRate(), 6);
+            exchangeRate.setRate(roundDecimal(1 / exchangeRate.getRate(), 2));
+            Double convertedAmount = roundDecimal(amount * exchangeRate.getRate(), 2);
             return new ExchangeAmountDTO(exchangeRate, amount, convertedAmount);
         }
         return null;
@@ -49,7 +49,7 @@ public class ExchangeAmountServiceImpl implements ExchangeAmountService {
 
         if (baseExchangeRate != null && targetExchangeRate != null) {
             Double crossRate = roundDecimal(targetExchangeRate.getRate() / baseExchangeRate.getRate(), 2);
-            Double convertedAmount = roundDecimal(amount * crossRate, 6);
+            Double convertedAmount = roundDecimal(amount * crossRate, 2);
             return new ExchangeAmountDTO(baseExchangeRate.getTargetCurrency(), targetExchangeRate.getTargetCurrency(), crossRate, amount, convertedAmount);
         } else {
             throw new CurrencyNotFoundException(CURRENCY_NOT_FOUND.getMessage());

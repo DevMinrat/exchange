@@ -1,52 +1,55 @@
 package com.devminrat.exchange.service;
 
-import com.devminrat.exchange.dao.ExchangeRateDao;
-import com.devminrat.exchange.dao.ExchangeRateDaoImpl;
-import com.devminrat.exchange.exceptions.CurrencyNotFoundException;
-import com.devminrat.exchange.exceptions.ExchangeRateAlreadyExistsException;
-import com.devminrat.exchange.model.CurrencyDTO;
 import com.devminrat.exchange.model.ExchangeAmountDTO;
 import com.devminrat.exchange.model.ExchangeRateDTO;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
-import java.util.Map;
-
-import static com.devminrat.exchange.constants.ErrorMessage.CURRENCY_NOT_FOUND;
-import static com.devminrat.exchange.constants.ErrorMessage.CURRENCY_PAIR_EXIST;
-import static com.devminrat.exchange.util.SplitCurrencyCodeUtil.splitCode;
+import static com.devminrat.exchange.util.CommonUtils.roundDecimal;
 
 public class ExchangeAmountServiceImpl implements ExchangeAmountService {
     private final ExchangeRateService exchangeRateService = new ExchangeRateServiceImpl();
-    private final ExchangeRateDao exchangeRateDao = new ExchangeRateDaoImpl();
-    private final CurrencyService currencyService = new CurrencyServiceImpl();
 
     @Override
     public ExchangeAmountDTO getExchangeAmount(String baseCurrencyCode, String targetCurrencyCode, Double amount) {
-        //TODO: refactor this, too large and unreadable.
-        ExchangeRateDTO exchangeRate = exchangeRateService.getExchangeRate(baseCurrencyCode + targetCurrencyCode);
-        if (exchangeRate != null) {
+        ExchangeAmountDTO directRate = getAmountAtDirectRate(baseCurrencyCode, targetCurrencyCode, amount);
+        if (directRate != null) return directRate;
 
-            Double convertedAmount = new BigDecimal(amount * exchangeRate.getRate()).setScale(6, RoundingMode.HALF_UP).doubleValue();
+        ExchangeAmountDTO exchangeRate = getAmountAtReverseRate(baseCurrencyCode, targetCurrencyCode, amount);
+        if (exchangeRate != null) return exchangeRate;
 
-            return new ExchangeAmountDTO(exchangeRate, amount, convertedAmount);
-        } else {
-            exchangeRate = exchangeRateService.getExchangeRate(targetCurrencyCode + baseCurrencyCode);
-            if (exchangeRate != null) {
+        ExchangeAmountDTO baseExchangeRate = getAmountAtCrossRate(baseCurrencyCode, targetCurrencyCode, amount);
+        if (baseExchangeRate != null) return baseExchangeRate;
 
-                exchangeRate.setRate(BigDecimal.valueOf(1 / exchangeRate.getRate()).setScale(6, RoundingMode.HALF_UP).doubleValue());
-
-                Double convertedAmount = new BigDecimal(amount * exchangeRate.getRate()).setScale(6, RoundingMode.HALF_UP).doubleValue();
-
-                return new ExchangeAmountDTO(exchangeRate, amount, convertedAmount);
-            } else
-                return null;
-        }
+        return null;
     }
 
-//    @Override
-//    public boolean exchangeRateExists(String baseCurrencyCode, String targetCurrencyCode) {
-//        return getExchangeRate(baseCurrencyCode + targetCurrencyCode) != null;
-//    }
+    private ExchangeAmountDTO getAmountAtDirectRate(String baseCurrencyCode, String targetCurrencyCode, Double amount) {
+        ExchangeRateDTO exchangeRate = exchangeRateService.getExchangeRate(baseCurrencyCode + targetCurrencyCode);
+        if (exchangeRate != null) {
+            Double convertedAmount = roundDecimal(amount * exchangeRate.getRate(), 6);
+            return new ExchangeAmountDTO(exchangeRate, amount, convertedAmount);
+        }
+        return null;
+    }
+
+    private ExchangeAmountDTO getAmountAtReverseRate(String baseCurrencyCode, String targetCurrencyCode, Double amount) {
+        ExchangeRateDTO exchangeRate = exchangeRateService.getExchangeRate(targetCurrencyCode + baseCurrencyCode);
+        if (exchangeRate != null) {
+            exchangeRate.setRate(roundDecimal(1 / exchangeRate.getRate(), 6));
+            Double convertedAmount = roundDecimal(amount * exchangeRate.getRate(), 6);
+            return new ExchangeAmountDTO(exchangeRate, amount, convertedAmount);
+        }
+        return null;
+    }
+
+    private ExchangeAmountDTO getAmountAtCrossRate(String baseCurrencyCode, String targetCurrencyCode, Double amount) {
+        ExchangeRateDTO baseExchangeRate = exchangeRateService.getExchangeRate("USD" + baseCurrencyCode);
+        ExchangeRateDTO targetExchangeRate = exchangeRateService.getExchangeRate("USD" + targetCurrencyCode);
+
+        if (baseExchangeRate != null && targetExchangeRate != null) {
+            Double crossRate = roundDecimal(targetExchangeRate.getRate() / baseExchangeRate.getRate(), 2);
+            Double convertedAmount = roundDecimal(amount * crossRate, 6);
+            return new ExchangeAmountDTO(baseExchangeRate.getTargetCurrency(), targetExchangeRate.getTargetCurrency(), crossRate, amount, convertedAmount);
+        }
+        return null;
+    }
 }

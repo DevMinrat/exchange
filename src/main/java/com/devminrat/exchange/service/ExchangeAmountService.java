@@ -10,8 +10,4 @@ import java.util.List;
 
 public interface ExchangeAmountService {
     ExchangeAmountDTO getExchangeAmount(String baseExchangeCode, String targetExchangeCode, Double amount);
-
-//    List<ExchangeRateDTO> getAllExchangeRates();
-
-//    boolean exchangeRateExists(String baseCurrencyId, String targetCurrencyId);
 }

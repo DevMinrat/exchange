@@ -6,14 +6,14 @@ public class ExchangeAmountDTO extends ExchangeRateDTO {
     @JsonIgnore
     private Integer id;
 
-    private double amount;
-    private double convertedAmount;
+    private Double amount;
+    private Double convertedAmount;
 
     public ExchangeAmountDTO() {
     }
 
-    public ExchangeAmountDTO(Integer id, CurrencyDTO baseCurrency, CurrencyDTO targetCurrency, double amount, double convertedAmount, Double rate) {
-        super(id, baseCurrency, targetCurrency, rate);
+    public ExchangeAmountDTO(CurrencyDTO baseCurrency, CurrencyDTO targetCurrency, Double rate, Double amount, Double convertedAmount) {
+        super(null, baseCurrency, targetCurrency, rate);
         this.amount = amount;
         this.convertedAmount = convertedAmount;
     }

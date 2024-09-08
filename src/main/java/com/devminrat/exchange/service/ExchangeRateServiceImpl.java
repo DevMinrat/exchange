@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static com.devminrat.exchange.constants.ErrorMessage.CURRENCY_NOT_FOUND;
 import static com.devminrat.exchange.constants.ErrorMessage.CURRENCY_PAIR_EXIST;
-import static com.devminrat.exchange.util.SplitCurrencyCodeUtil.splitCode;
+import static com.devminrat.exchange.util.CommonUtils.splitCurrenciesCode;
 
 public class ExchangeRateServiceImpl implements ExchangeRateService {
     private final ExchangeRateDao exchangeRateDao = new ExchangeRateDaoImpl();
@@ -20,7 +20,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     @Override
     public ExchangeRateDTO getExchangeRate(String exchangeRateCode) {
-        Map<String, String> currencyCodes = splitCode(exchangeRateCode);
+        Map<String, String> currencyCodes = splitCurrenciesCode(exchangeRateCode);
 
         if (currencyCodes != null) {
             return exchangeRateDao.getExchangeRate(currencyCodes.get("baseCode"), currencyCodes.get("targetCode"));

@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static com.devminrat.exchange.constants.ErrorMessage.*;
 import static com.devminrat.exchange.util.ResponseUtil.*;
-import static com.devminrat.exchange.util.SplitCurrencyCodeUtil.splitCode;
+import static com.devminrat.exchange.util.CommonUtils.splitCurrenciesCode;
 import static com.devminrat.exchange.util.ValidationUtil.isValidValues;
 
 @WebServlet(name = "exchangeRateController", value = "/exchangeRates/*")
@@ -91,7 +91,7 @@ public class ExchangeRateController extends HttpServlet {
 
         try {
             String[] path = pathInfo.split("/");
-            Map<String, String> currencyCodes = splitCode(path[1]);
+            Map<String, String> currencyCodes = splitCurrenciesCode(path[1]);
             BufferedReader reader = req.getReader();
 
             rate = Double.parseDouble(reader.readLine().replaceAll("[^\\d.]", ""));

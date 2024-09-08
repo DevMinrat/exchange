@@ -20,6 +20,10 @@ import static com.devminrat.exchange.util.ValidationUtil.isValidValues;
 
 @WebServlet(name = "exchangeController", value = "/exchange")
 public class ExchangeAmountController extends HttpServlet {
+    private final String FIELD_FROM = "from";
+    private final String FIELD_TO = "to";
+    private final String FIELD_AMOUNT = "amount";
+
     private final ExchangeAmountService exchangeAmountService = new ExchangeAmountServiceImpl();
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -27,19 +31,14 @@ public class ExchangeAmountController extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
 
-        String baseCurrencyCode = req.getParameter("from");
-        String targetCurrencyCode = req.getParameter("to");
-        String amount = req.getParameter("amount");
+        String baseCurrencyCode = req.getParameter(FIELD_FROM);
+        String targetCurrencyCode = req.getParameter(FIELD_TO);
+        String amount = req.getParameter(FIELD_AMOUNT);
 
         if (isValidValues(baseCurrencyCode, targetCurrencyCode, amount)) {
-            var res = exchangeAmountService.getExchangeAmount(baseCurrencyCode, targetCurrencyCode, Double.parseDouble(amount));
-
+            ExchangeAmountDTO res = exchangeAmountService.getExchangeAmount(baseCurrencyCode, targetCurrencyCode, Double.parseDouble(amount));
             String json = objectMapper.writeValueAsString(res);
             resp.getWriter().write(json);
-
-
-            // 2) get BA from exchangeRates, then reverse rate and calculate convertedAmount = amount * rate
-            // 3) get USD-A and USD-B, then calculate rate and calculate convertedAmount = amount * rate
         } else {
             writeBadRequestResponse(resp, CHECK_URL.getMessage());
         }

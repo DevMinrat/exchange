@@ -135,12 +135,11 @@ public class ExchangeRateDaoImpl implements ExchangeRateDao {
     }
 
     private static ExchangeRateDTO createExchangeRate(ResultSet rs) throws SQLException {
-        CurrencyDTO baseCurrency = new CurrencyDTO(rs.getInt("BaseID"), rs.getString("BaseCode"),
-                rs.getString("BaseName"), rs.getString("BaseSign"));
-        CurrencyDTO targetCurrency = new CurrencyDTO(rs.getInt("TargetID"), rs.getString("TargetCode"),
-                rs.getString("TargetName"), rs.getString("TargetSign"));
+        CurrencyDTO baseCurrency = new CurrencyDTO(rs.getInt("BaseID"), rs.getString("BaseName"),
+                rs.getString("BaseCode"), rs.getString("BaseSign"));
+        CurrencyDTO targetCurrency = new CurrencyDTO(rs.getInt("TargetID"), rs.getString("TargetName"),
+                rs.getString("TargetCode"), rs.getString("TargetSign"));
 
-        ExchangeRateDTO exchangeRate = new ExchangeRateDTO(rs.getInt("id"), baseCurrency, targetCurrency, rs.getDouble("Rate"));
-        return exchangeRate;
+        return new ExchangeRateDTO(rs.getInt("id"), baseCurrency, targetCurrency, rs.getDouble("Rate"));
     }
 }

@@ -9,5 +9,5 @@ import java.util.List;
 
 
 public interface ExchangeAmountService {
-    ExchangeAmountDTO getExchangeAmount(String baseExchangeCode, String targetExchangeCode, Double amount);
+    ExchangeAmountDTO getExchangeAmount(String baseExchangeCode, String targetExchangeCode, Double amount) throws CurrencyNotFoundException;
 }

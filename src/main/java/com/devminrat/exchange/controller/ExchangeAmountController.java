@@ -1,5 +1,6 @@
 package com.devminrat.exchange.controller;
 
+import com.devminrat.exchange.exceptions.CurrencyNotFoundException;
 import com.devminrat.exchange.model.ExchangeAmountDTO;
 import com.devminrat.exchange.model.ExchangeRateDTO;
 import com.devminrat.exchange.service.ExchangeAmountService;
@@ -35,14 +36,17 @@ public class ExchangeAmountController extends HttpServlet {
         String targetCurrencyCode = req.getParameter(FIELD_TO);
         String amount = req.getParameter(FIELD_AMOUNT);
 
-        if (isValidValues(baseCurrencyCode, targetCurrencyCode, amount)) {
-            ExchangeAmountDTO res = exchangeAmountService.getExchangeAmount(baseCurrencyCode, targetCurrencyCode, Double.parseDouble(amount));
-            String json = objectMapper.writeValueAsString(res);
-            resp.getWriter().write(json);
-        } else {
-            writeBadRequestResponse(resp, CHECK_URL.getMessage());
+        try {
+            if (isValidValues(baseCurrencyCode, targetCurrencyCode, amount)) {
+                ExchangeAmountDTO res = exchangeAmountService.getExchangeAmount(baseCurrencyCode, targetCurrencyCode, Double.parseDouble(amount));
+                String json = objectMapper.writeValueAsString(res);
+                resp.getWriter().write(json);
+            } else {
+                writeBadRequestResponse(resp, CHECK_URL.getMessage());
+            }
+        } catch (CurrencyNotFoundException e) {
+            writeNotFoundResponse(resp, CURRENCY_NOT_FOUND.getMessage());
         }
-
     }
 
 }

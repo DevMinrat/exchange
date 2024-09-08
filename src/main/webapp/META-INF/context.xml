@@ -1,0 +1,16 @@
+<Context>
+    <Resource name="jdbc/exchangeDB"
+              auth="Container"
+              type="javax.sql.DataSource"
+              maxTotal="100"
+              maxIdle="30"
+              maxWaitMillis="10000"
+              driverClassName="org.sqlite.JDBC"
+              url="jdbc:sqlite:${catalina.home}/webapps/exchange/WEB-INF/exchange.db"
+              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+              initialSize="10"
+              removeAbandonedTimeout="60"
+              logAbandoned="true"
+              removeAbandoned="true"
+              closeMethod="close"/>
+</Context>

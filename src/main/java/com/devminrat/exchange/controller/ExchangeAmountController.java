@@ -45,7 +45,7 @@ public class ExchangeAmountController extends HttpServlet {
                 writeBadRequestResponse(resp, CHECK_URL.getMessage());
             }
         } catch (CurrencyNotFoundException e) {
-            writeNotFoundResponse(resp, CURRENCY_NOT_FOUND.getMessage());
+            writeNotFoundResponse(resp, CURRENCY_PAIR_NOT_FOUND.getMessage());
         }
     }
 

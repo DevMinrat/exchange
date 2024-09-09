@@ -54,7 +54,7 @@ $(document).ready(function() {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
 
-                $(toast).find('.toast-body').text(error.message);
+                $(toast).find('.toast-body').text(error.error);
                 toast.toast("show");
             }
         });
@@ -75,8 +75,7 @@ $(document).ready(function() {
             error: function(jqXHR, textStatus, errorThrown) {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
-
-                $(toast).find('.toast-body').text(error.message);
+                $(toast).find('.toast-body').text(error.error);
                 toast.toast("show");
             }
         });
@@ -109,7 +108,7 @@ $(document).ready(function() {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
 
-                $(toast).find('.toast-body').text(error.message);
+                $(toast).find('.toast-body').text(error.error);
                 toast.toast("show");
             }
         });
@@ -150,7 +149,7 @@ $(document).ready(function() {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
 
-                $(toast).find('.toast-body').text(error.message);
+                $(toast).find('.toast-body').text(error.error);
                 toast.toast("show");
             }
         });
@@ -173,7 +172,7 @@ $(document).ready(function() {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
 
-                $(toast).find('.toast-body').text(error.message);
+                $(toast).find('.toast-body').text(error.error);
                 toast.toast("show");
             }
         });
@@ -199,7 +198,7 @@ $(document).ready(function() {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
 
-                $(toast).find('.toast-body').text(error.message);
+                $(toast).find('.toast-body').text(error.error);
                 toast.toast("show");
             }
         });

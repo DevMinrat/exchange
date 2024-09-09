@@ -53,7 +53,7 @@ public class ExchangeRateController extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            writeInternalServerErrorResponse(resp);
+            writeInternalServerErrorResponse(e, resp);
         }
     }
 
@@ -62,13 +62,13 @@ public class ExchangeRateController extends HttpServlet {
         resp.setContentType("application/json");
 
         try {
-            String baseCode = req.getParameter(ExchangeRateDTO.FIELD_TARGET_CODE);
-            String targetCode = req.getParameter(ExchangeRateDTO.FIELD_BASE_CODE);
+            String baseCode = req.getParameter(ExchangeRateDTO.FIELD_BASE_CODE);
+            String targetCode = req.getParameter(ExchangeRateDTO.FIELD_TARGET_CODE);
             String rate = req.getParameter(ExchangeRateDTO.FIELD_RATE);
 
             if (isValidValues(baseCode, targetCode, rate)) {
-                ExchangeRateDTO newExchangeRate = exchangeRateService.setExchangeRate(req.getParameter(baseCode),
-                        req.getParameter(targetCode), Double.parseDouble(req.getParameter(rate)));
+                ExchangeRateDTO newExchangeRate = exchangeRateService.setExchangeRate(baseCode,
+                        targetCode, Double.parseDouble(rate));
 
                 String json = objectMapper.writeValueAsString(newExchangeRate);
                 writeCreatedResponse(resp, json);
@@ -80,7 +80,7 @@ public class ExchangeRateController extends HttpServlet {
         } catch (ExchangeRateAlreadyExistsException e) {
             writeConflictResponse(resp, CURRENCY_PAIR_EXIST.getMessage());
         } catch (Exception e) {
-            writeInternalServerErrorResponse(resp);
+            writeInternalServerErrorResponse(e, resp);
         }
     }
 
@@ -113,7 +113,7 @@ public class ExchangeRateController extends HttpServlet {
         } catch (ExchangeRateAlreadyExistsException e) {
             writeConflictResponse(resp, CURRENCY_PAIR_EXIST.getMessage());
         } catch (Exception e) {
-            writeInternalServerErrorResponse(resp);
+            writeInternalServerErrorResponse(e, resp);
         }
     }
 

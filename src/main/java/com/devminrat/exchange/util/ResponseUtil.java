@@ -18,6 +18,12 @@ public final class ResponseUtil {
         resp.getWriter().write("{\"error\":\"Bad Request." + msg + "\"}");
     }
 
+    public static void writeInternalServerErrorResponse(Exception e, HttpServletResponse resp) throws IOException {
+        e.printStackTrace();
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        resp.getWriter().write("{\"error\":\"Internal Server Error\"}");
+    }
+
     public static void writeInternalServerErrorResponse(HttpServletResponse resp) throws IOException {
         resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         resp.getWriter().write("{\"error\":\"Internal Server Error\"}");

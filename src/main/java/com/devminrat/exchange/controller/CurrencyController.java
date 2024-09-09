@@ -36,7 +36,7 @@ public class CurrencyController extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            writeInternalServerErrorResponse(resp);
+            writeInternalServerErrorResponse(e, resp);
         }
     }
 
@@ -69,7 +69,7 @@ public class CurrencyController extends HttpServlet {
             }
 
         } catch (Exception e) {
-            writeInternalServerErrorResponse(resp);
+            writeInternalServerErrorResponse(e, resp);
         }
 
     }
